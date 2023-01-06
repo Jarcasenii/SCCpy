@@ -1,0 +1,12 @@
+Extension modules: win32api, _win32sysloader, PIL. imaging, numpy.core._multiarray umath, numpy.core. multiarray tests, numpy.linalg. umath linalg, numpy.fft._
+pocketfft_internal, numpy.random._conmon, numpy.random.bit generator, numpy.random. bounded_integers, numpy.random. mt19937, numpy.random.mtrand, numpy.random.
+_philox, numpy.random._pcg64, numpy.random._sfc64, numpy.random. generator, scipy. lib. callback c, scipy.ndimage. nd image, scipy.special._ufuncs cx, scipy.
+Special._ufuncs, scipy.special._specfun, scipy.special._comb, scipy.linalg. fblas, scipy.linalg. flapack, scipy.linalg. cythonized array utils, scipy.linalg. f
+linalg, scipy.linalg. solve toeplitz, scipy.linalg. matfuncs sqrtm triu, scipy.linalg.cython_lapack, scipy.linalg.cython blas, scipy.linalg. matfuncs expm, sci
+py-linalg. decomp update, scipy.sparse. sparsetools, _csparsetools, scipy.sparse._csparsetools, scipy.sparse.linalg. isolve. iterative, scipy.sparse.linalg. ds
+olve._superlu, scipy.sparse.linalg. eigen.arpack._arpack, scipy.sparse.csgraph. tools, scipy.sparse.csgraph._shortest_path, scipy.sparse.csgraph. traversal, sc
+ipy.sparse.csgraph._min_spanning tree, scipy.sparse.csgraph. flow, scipy.sparse.csgraph._matching, scipy.sparse.csgraph._reordering, scipy.special. ellip harm_
+2, ni label, scipy.ndimage. ni label, matplotlib. c internal utils, matplotlib. path, kiwisolver. cext, matplotlib. image, PIL. webp (total: 53)
+
+ 
+
