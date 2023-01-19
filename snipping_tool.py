@@ -2,8 +2,10 @@ import sys
 from PyQt5 import QtWidgets, QtCore, QtGui
 import tkinter as tk
 from PIL import ImageGrab
-import pytesseract
+# import pytesseract
 import pyperclip
+
+from recognize_text_from_image import interface
 
 IMAGE_PATH = 'capture.jpg'
 
@@ -51,13 +53,16 @@ class MyWidget(QtWidgets.QWidget):
 
         img = ImageGrab.grab(bbox=(x1, y1, x2, y2))
         img.save(IMAGE_PATH)
+
         ocrStuff()
 
+
 def ocrStuff():
-    pytesseract.pytesseract.tesseract_cmd = r'D:/Tesseract-OCR/tesseract.exe'
-    text = pytesseract.image_to_string(IMAGE_PATH, lang = 'eng')
-    pyperclip.copy(''.join(text))
-    
+    predictor = interface.Predictor()
+    prediction = predictor.predict(IMAGE_PATH)
+    print(prediction)
+    pyperclip.copy(''.join(prediction))
+
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     window = MyWidget()
