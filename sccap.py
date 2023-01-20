@@ -28,12 +28,17 @@ class VideoAudioConverter:
         clip.audio.write_audiofile(r'{}wav'.format(path[:-3]))
 
 
-    
+  
 def convert_to_wav(filename):
     clip = VideoFileClip(filename)
     clip.audio.write_audiofile(filename[:-4] + ".wav")
     clip.close()
 
+def convert_to_16k():
+    filename = filedialog.askopenfilename(title="Select a File", filetypes=(("Audio Files", "*.wav"),))
+    patha = filename
+    subprocess.call(['ffmpeg','-i',patha,'-acodec','pcm_s16le','-ac','1','-ar','16000','out.wav'])
+    
 def youtubedl():
     links = youtube_downloader.input_links()
     for link in links:
@@ -69,6 +74,7 @@ def transcribe():
     text_file = open("data.txt", "w")
     text_file.write(text)
     text_file.close()
+    
 def clip():
     subprocess.call(["python", "clippy.py"])
        
@@ -87,6 +93,8 @@ label.pack(pady=12, padx=10)
 button = customtkinter.CTkButton (master=frame1, text="Upload From PC", command=VideoAudioConverter(root).browsepc)
 button.pack(pady=12, padx=10)
 button = customtkinter.CTkButton (master=frame1, text="Youtube Link", command=youtubedl)
+button.pack(pady=12, padx=10)
+button = customtkinter.CTkButton (master=frame1, text="Convert ", command=convert_to_16k)
 button.pack(pady=12, padx=10)
 button = customtkinter.CTkButton (master=frame1, text="Transcribe", command=transcribe)
 button.pack(pady=12, padx=10)

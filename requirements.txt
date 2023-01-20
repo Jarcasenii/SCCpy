@@ -14,4 +14,12 @@ editdistance
 pyclipper
 keras
 shapely
+customtkinter
+sox
+pystray
+pytube
+pydub
+moviepy
+pyctcdecode
+transformers
 efficientnet==1.0.0
