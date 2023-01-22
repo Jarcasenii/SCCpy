@@ -4,7 +4,7 @@ import torch
 import logging
 from multiprocessing import Pool
 import numpy as np
-from huggingsound.token_set import TokenSet
+from token_set import TokenSet
 
 class Decoder():
     """

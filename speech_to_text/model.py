@@ -11,12 +11,12 @@ from transformers import (
     Wav2Vec2Processor, 
     AutoModelForCTC
 )
-from huggingsound.utils import get_chunks, get_waveforms, get_dataset_from_dict_list
-from huggingsound.token_set import TokenSet
-from huggingsound.normalizer import DefaultTextNormalizer
-from huggingsound.trainer import TrainingArguments, ModelArguments, finetune_ctc
-from huggingsound.speech_recognition.decoder import Decoder, GreedyDecoder
-from huggingsound.metrics import cer, wer
+from utils import get_chunks, get_waveforms, get_dataset_from_dict_list
+from token_set import TokenSet
+from normalizer import DefaultTextNormalizer
+from trainer import TrainingArguments, ModelArguments, finetune_ctc
+from decoder import Decoder, GreedyDecoder
+from metrics import cer, wer
 
 # Setup logging
 logger = logging.getLogger(__name__)
