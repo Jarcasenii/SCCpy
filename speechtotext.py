@@ -1,8 +1,9 @@
+from recognize_text_from_video import SpeechRecognitionModel
+import pyperclip
 
-from speech_to_text import SpeechRecognitionModel
-
-model = SpeechRecognitionModel("facebook/wav2vec2-large-960h-lv60-self")
+model = SpeechRecognitionModel("facebook/wav2vec2-base-100h")
 audio_paths = ["out.wav"]
 transcriptions = model.transcribe(audio_paths)
 print(transcriptions)
-    
+transcriptstr = str(transcriptions)
+pyperclip.copy(''.join(transcriptstr))

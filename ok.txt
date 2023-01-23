@@ -1,0 +1,4 @@
+home 
+speech recognition 
+character recognition 
+

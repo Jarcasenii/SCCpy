@@ -35,7 +35,7 @@ def convert_to_wav(filename):
     clip.close()
 
 def convert_to_16k():
-    filename = filedialog.askopenfilename(title="Select a File", filetypes=(("Audio Files", "*.wav"),))
+    filename = filedialog.askopenfilename(title="Select a File", filetypes=(("Audio Files", "*.wav , *.mp4"),))
     patha = filename
     subprocess.call(['ffmpeg','-i',patha,'-acodec','pcm_s16le','-ac','1','-ar','16000','out.wav'])
     

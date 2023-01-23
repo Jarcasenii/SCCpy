@@ -1,11 +1,42 @@
 import customtkinter
+import subprocess
 import tkinter
+from tkinter import filedialog
 import os
 from PIL import Image
+import moviepy as mp
 
 
 class App(customtkinter.CTk):
+    
     def __init__(self):
+        def convert():
+            filename = filedialog.askopenfilename(title="Select a File", filetypes=(("Audio or Video Files", "*.wav , *.mp4"),))
+            patha = filename
+            subprocess.call(['ffmpeg','-i',patha,'-acodec','pcm_s16le','-ac','1','-ar','16000','out.wav'])
+            self.ocr_frame_textbox.insert("0.0","Ctrl + V to paste screenshotted text")
+        
+        def transcribe():   
+            subprocess.call(['python','speechtotext.py'])
+            
+        def snip():
+            subprocess.call(["python", "snipping_tool.py"])
+            self.ocr_frame_textbox.insert("0.0","Ctrl + V to paste screenshotted text")
+        
+        def save1():
+            f = open("demofile1.txt", "w")
+            f = filedialog.asksaveasfile(mode='w', defaultextension=".txt")
+            text2save = self.ocr_frame_textbox.get(0.0,"end")
+            f.write(text2save)
+            f.close()
+        
+        def save2():
+            f = open("demofile2.txt", "w")
+            f = filedialog.asksaveasfile(mode='w', defaultextension=".txt")
+            text2save = self.ocr_frame_textbox.get(0.0,"end")
+            f.write(text2save)
+            f.close()
+             
         super().__init__()
 
         self.title("Speech Chara Caption")
@@ -63,11 +94,11 @@ class App(customtkinter.CTk):
         self.home_label = customtkinter.CTkLabel(self.home_frame, text="Welcome to \nSpeech Character Caption!",
                                                   font=customtkinter.CTkFont(size=30, weight="bold"))
         self.home_label.grid(row=1, column=0, padx=20, pady=10)
-        tabview_1 = customtkinter.CTkTabview(self.home_frame, width=1280, height=200)
+        tabview_1 = customtkinter.CTkTabview(self.home_frame, width=1280, height=300)
         tabview_1.grid(pady=10, padx=10)
         tabview_1.add("Speech Recognition")
         label = customtkinter.CTkLabel(master=tabview_1,
-                               text="This feature will allow you to convert Speech from videos to a text format. \n\nUpload video button lets the user upload a video from the PC, \nor paste a YouTube link lets the user paste a video link from YouTube. \n\nSave file to .txt lets you save your file to a .txt format.",
+                               text="This feature will allow you to convert Speech from videos to a text format. \n\nUpload video button lets the user upload a video from the PC, \nor paste a YouTube link lets the user paste a video link from YouTube. \n\n Transcribe button lets you transcribe the file you chose. \n\n Save file to .txt lets you save your file to a .txt format.",
                                width=10,
                                height=10,
                                font=customtkinter.CTkFont(size=18, weight="normal"))
@@ -85,22 +116,24 @@ class App(customtkinter.CTk):
         # create speech frame
         self.speech_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
         self.speech_frame.grid_columnconfigure(0, weight=1)
-        self.speech_frame_button_upload=customtkinter.CTkButton(self.speech_frame, text="Upload Video or audio", image=self.image_icon_image, compound="top")
+        self.speech_frame_button_upload=customtkinter.CTkButton(self.speech_frame, text="Upload Video or audio", image=self.image_icon_image, compound="top",command=convert)
         self.speech_frame_button_upload.grid(row=1, column=0, padx=20, pady=10)
         self.speech_frame_button_yt = customtkinter.CTkButton(self.speech_frame, text="or paste a YouTube link")
         self.speech_frame_button_yt.grid(row=2, column=0, padx=20, pady=10)
+        self.speech_frame_button_yt = customtkinter.CTkButton(self.speech_frame, text="Transcribe Video", command=transcribe)
+        self.speech_frame_button_yt.grid(row=3, column=0, padx=20, pady=10)
         self.speech_frame_textbox = customtkinter.CTkTextbox(self.speech_frame, height=500)
-        self.speech_frame_textbox.grid(row=3, column=0, padx=(20, 20), pady=(20, 20), sticky="nsew")
-        self.speech_frame_save_as = customtkinter.CTkButton(self.speech_frame, text="save as.txt")
-        self.speech_frame_save_as.grid(row=4, column=0, padx=20, pady=10)
+        self.speech_frame_textbox.grid(row=4, column=0, padx=(20, 20), pady=(20, 20), sticky="nsew")
+        self.speech_frame_save_as = customtkinter.CTkButton(self.speech_frame, text="save as.txt", command=save2)
+        self.speech_frame_save_as.grid(row=5, column=0, padx=20, pady=10)
         
         self.ocr_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
         self.ocr_frame.grid_columnconfigure(0, weight=1)
-        self.ocr_frame_button_upload=customtkinter.CTkButton(self.ocr_frame, text="Capture Image", image=self.image_icon_image, compound="top")
+        self.ocr_frame_button_upload=customtkinter.CTkButton(self.ocr_frame, text="Capture Image", image=self.image_icon_image, compound="top",command=snip)
         self.ocr_frame_button_upload.grid(row=1, column=0, padx=20, pady=10)
         self.ocr_frame_textbox = customtkinter.CTkTextbox(self.ocr_frame, height=500)
         self.ocr_frame_textbox.grid(row=2, column=0, padx=(20, 20), pady=(20, 20), sticky="nsew")
-        self.ocr_frame_save_as = customtkinter.CTkButton(self.ocr_frame, text="save as.txt")
+        self.ocr_frame_save_as = customtkinter.CTkButton(self.ocr_frame, text="save as.txt", command=save2)
         self.ocr_frame_save_as.grid(row=3, column=0, padx=20, pady=10)
         # select default frame
         self.select_frame_by_name("home")

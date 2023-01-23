@@ -47,7 +47,7 @@ class MyWidget(QtWidgets.QWidget):
         self.close()
 
         x1 = min(self.begin.x(), self.end.x())
-        y1 = min(self.begin.y(), self.end.y())
+        y1 = min(self.begin.y(), self.end.y())   
         x2 = max(self.begin.x(), self.end.x())
         y2 = max(self.begin.y(), self.end.y())
 
