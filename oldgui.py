@@ -8,8 +8,7 @@ from tkinter import *
 import moviepy.editor as mp
 import pystray
 from pystray import MenuItem as item
-from PIL import Image, ImageTk
-import speechsr
+from PIL import Image
 from moviepy.editor import VideoFileClip
 
 

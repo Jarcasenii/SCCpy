@@ -1,8 +1,9 @@
 import customtkinter
 import subprocess
 import tkinter
-from tkinter import filedialog
+from tkinter import filedialog, messagebox, Label
 import os
+import time
 from PIL import Image
 import moviepy as mp
 
@@ -10,36 +11,83 @@ import moviepy as mp
 class App(customtkinter.CTk):
     
     def __init__(self):
+
         def convert():
             filename = filedialog.askopenfilename(title="Select a File", filetypes=(("Audio or Video Files", "*.wav , *.mp4"),))
             patha = filename
             subprocess.call(['ffmpeg','-i',patha,'-acodec','pcm_s16le','-ac','1','-ar','16000','out.wav'])
-            self.ocr_frame_textbox.insert("0.0","Ctrl + V to paste screenshotted text")
         
         def transcribe():   
-            subprocess.call(['python','speechtotext.py'])
+            myprocess = subprocess.Popen(['python','speechtotext.py'])
+            mywindow = tkinter.Toplevel()
+            mywindow.geometry("200x50")
+            
+            Label(mywindow, text = "Running...").place(x = 0,y = 0) 
+            
+            messagebox.showinfo(title="Process Loading..", message="Process is ongoing, wait for window to return.")
+            self.withdraw()
+            
+            def check_process():
+                if myprocess.poll() is None:
+                    mywindow.after(100, check_process)
+                else:
+                    mywindow.destroy()
+            check_process()  
+            
+            while myprocess.poll() is None:
+                time.sleep(0.1)
+                
+            self.deiconify()
+            
+            self.speech_frame_textbox.insert("0.0","Ctrl + V to paste screenshotted text")
             
         def snip():
-            subprocess.call(["python", "snipping_tool.py"])
+            myprocess = subprocess.Popen(["python", "snipping_tool.py"])
+            mywindow = tkinter.Toplevel()
+            mywindow.geometry("200x50")
+            
+            Label(mywindow, text = "Running...").place(x = 0,y = 0) 
+            
+            messagebox.showinfo(title="Process Loading..", message="Process is ongoing, wait for window to return.")
+            self.withdraw()
+            
+            def check_process():
+                if myprocess.poll() is None:
+                    mywindow.after(100, check_process)
+                else:
+                    mywindow.destroy()
+            check_process()  
+            
+            while myprocess.poll() is None:
+                time.sleep(0.1)
+                
+            self.deiconify()
+                 
             self.ocr_frame_textbox.insert("0.0","Ctrl + V to paste screenshotted text")
         
         def save1():
             f = open("demofile1.txt", "w")
-            f = filedialog.asksaveasfile(mode='w', defaultextension=".txt")
-            text2save = self.ocr_frame_textbox.get(0.0,"end")
+            files = [('Text Document', '*.txt'),
+             ('Word Document', '*.doc'), 
+             ('PDF File', '*.pdf')]
+            f = filedialog.asksaveasfile(mode='w', defaultextension=files, filetypes=files)
+            text2save = self.speech_frame_textbox.get(0.0,"end")
             f.write(text2save)
             f.close()
         
         def save2():
             f = open("demofile2.txt", "w")
-            f = filedialog.asksaveasfile(mode='w', defaultextension=".txt")
+            files = [('Text Document', '*.txt'),
+             ('Word Document', '*.doc'), 
+             ('PDF File', '*.pdf')]
+            f = filedialog.asksaveasfile(mode='w', defaultextension=files, filetypes=files)
             text2save = self.ocr_frame_textbox.get(0.0,"end")
             f.write(text2save)
             f.close()
              
         super().__init__()
 
-        self.title("Speech Chara Caption")
+        self.title("uTranscribe")
         self.geometry("1080x720")
 
         # set grid layout 1x2
@@ -64,7 +112,7 @@ class App(customtkinter.CTk):
         self.navigation_frame.grid(row=0, column=0, sticky="nsew")
         self.navigation_frame.grid_rowconfigure(4, weight=1)
 
-        self.navigation_frame_label = customtkinter.CTkLabel(self.navigation_frame, text="  SCCaption", image=self.logo_image,
+        self.navigation_frame_label = customtkinter.CTkLabel(self.navigation_frame, text="  uTranscribe", image=self.logo_image,
                                                              compound="left", font=customtkinter.CTkFont(size=15, weight="bold"))
         self.navigation_frame_label.grid(row=0, column=0, padx=20, pady=20)
 
@@ -91,7 +139,7 @@ class App(customtkinter.CTk):
         self.home_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
         self.home_frame.grid_columnconfigure(0, weight=1)
 
-        self.home_label = customtkinter.CTkLabel(self.home_frame, text="Welcome to \nSpeech Character Caption!",
+        self.home_label = customtkinter.CTkLabel(self.home_frame, text="Welcome to \nuTranscribe!",
                                                   font=customtkinter.CTkFont(size=30, weight="bold"))
         self.home_label.grid(row=1, column=0, padx=20, pady=10)
         tabview_1 = customtkinter.CTkTabview(self.home_frame, width=1280, height=300)
@@ -106,7 +154,7 @@ class App(customtkinter.CTk):
         
         tabview_2 = customtkinter.CTkTabview(self.home_frame, width=1280, height=200)
         tabview_2.grid(pady=10, padx=10)
-        tabview_2.add("Character Caption")
+        tabview_2.add("Character Recognition")
         label = customtkinter.CTkLabel(master=tabview_2,
                                text="This feature will allow you to select a part of your screen to take a screenshot and extract the text from it. \n\nCapture button lets the user take a screenshot. \n\nSave file to .txt lets you save your file to a .txt format.",
                                width=10,
@@ -124,7 +172,7 @@ class App(customtkinter.CTk):
         self.speech_frame_button_yt.grid(row=3, column=0, padx=20, pady=10)
         self.speech_frame_textbox = customtkinter.CTkTextbox(self.speech_frame, height=500)
         self.speech_frame_textbox.grid(row=4, column=0, padx=(20, 20), pady=(20, 20), sticky="nsew")
-        self.speech_frame_save_as = customtkinter.CTkButton(self.speech_frame, text="save as.txt", command=save2)
+        self.speech_frame_save_as = customtkinter.CTkButton(self.speech_frame, text="Save As", command=save1)
         self.speech_frame_save_as.grid(row=5, column=0, padx=20, pady=10)
         
         self.ocr_frame = customtkinter.CTkFrame(self, corner_radius=0, fg_color="transparent")
@@ -133,7 +181,7 @@ class App(customtkinter.CTk):
         self.ocr_frame_button_upload.grid(row=1, column=0, padx=20, pady=10)
         self.ocr_frame_textbox = customtkinter.CTkTextbox(self.ocr_frame, height=500)
         self.ocr_frame_textbox.grid(row=2, column=0, padx=(20, 20), pady=(20, 20), sticky="nsew")
-        self.ocr_frame_save_as = customtkinter.CTkButton(self.ocr_frame, text="save as.txt", command=save2)
+        self.ocr_frame_save_as = customtkinter.CTkButton(self.ocr_frame, text="Save As", command=save2)
         self.ocr_frame_save_as.grid(row=3, column=0, padx=20, pady=10)
         # select default frame
         self.select_frame_by_name("home")
